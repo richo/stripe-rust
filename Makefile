@@ -7,7 +7,7 @@ all: $(libstripe_so)
 cli: example/cli.rs $(libstripe_so)
 	$(RUSTC) -o $@ $(RUST_FLAGS) -L build $<
 
-$(libstripe_so): Makefile src/connection.rs src/lib.rs
+$(libstripe_so): Makefile $(wildcard src/*.rs)
 	mkdir -p build/
 	$(RUSTC) $(RUST_FLAGS) src/lib.rs --out-dir=build
 	@touch $@
