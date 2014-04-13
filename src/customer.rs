@@ -8,7 +8,7 @@ pub struct CustomerList {
     object: ~str,
     has_more: bool,
     url: ~str,
-    data: ~[Customer]
+    pub data: ~[Customer]
 }
 
 #[deriving(Decodable,Show)]

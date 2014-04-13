@@ -3,7 +3,7 @@ pub struct CardList {
     object: ~str,
     has_more: bool,
     url: ~str,
-    data: ~[Card]
+    pub data: ~[Card]
 }
 
 #[deriving(Decodable,Show)]

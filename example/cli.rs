@@ -6,12 +6,14 @@ use stripe::connection::Connection;
 use http::method::Get;
 
 use std::os;
+use std::fmt::Show;
 
 fn usage() {
     let args = os::args();
     println!("Usage: {} <record type>", args[0]);
     println!("  Record types:");
     println!("  - customers");
+    println!("  - cards");
 }
 
 fn main() {
@@ -27,19 +29,22 @@ fn main() {
     };
 }
 
+fn print_records<T: Show, I: Iterator<T>>(mut iter: I) {
+    for i in iter {
+        println!("{}", i);
+    }
+}
+
 fn fetch_and_print_records(typ: ~str) {
     let secretKey: ~str = os::getenv("STRIPE_SECRET_KEY").expect("No STRIPE_SECRET_KEY set");
     let conn = Connection::new(secretKey);
-    let mut data;
 
     if typ == ~"customers" {
-        data = conn.customers()
+        print_records(conn.customers().data.iter());
+    } else if typ == ~"cards" {
+        print_records(conn.cards().data.iter());
     } else {
         usage();
         return;
-    }
-
-    for item in data.iter() {
-        println!("{}", item);
     }
 }

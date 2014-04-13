@@ -2,6 +2,7 @@ use http::client::RequestWriter;
 use http::method::Get;
 use http::headers::request::ExtensionHeader;
 use customer::CustomerList;
+use card::CardList;
 use decoder::Decoder;
 use url::Url;
 use serialize::{json,Decodable};
@@ -49,4 +50,10 @@ impl Connection {
         let req = self.request(~"/v1/customers");
         return Connection::fetch(req);
     }
+
+    pub fn cards(&self) -> CardList {
+        let req = self.request(~"/v1/cards");
+        return Connection::fetch(req);
+    }
+
 }
