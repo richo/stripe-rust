@@ -1,3 +1,6 @@
+RUST_FLAGS = -L ext/rust-http/build  -L ext/rust-openssl/build
+client: src/main.rs
+	rustc -o $@ $(RUST_FLAGS) $<
 
 ext: ext/rust-http ext/rust-openssl ext-http
 
