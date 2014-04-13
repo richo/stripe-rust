@@ -10,21 +10,9 @@ use std::str;
 use std::io::println;
 use url::{Url,UserInfo,Query};
 
-static EMPTY_QUERY: Query = vec!();
-
-static BASE_URL: Url = Url::new (
-    ~"https",
-    None,
-    ~"api.stripe.com",
-    None,
-    ~"",
-    EMPTY_QUERY,
-    None
-);
-
 fn authenticatedUrl(apiKey: ~str) -> Url {
-    let mut url = BASE_URL.clone();
-    url.user = UserInfo { user: apiKey, pass: None };
+    let mut url: Url = from_str("https://api.stripe.com").unwrap();
+    url.user = Some(UserInfo { user: apiKey, pass: None });
 
     return url;
 }
