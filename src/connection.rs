@@ -47,8 +47,6 @@ impl Connection {
 
     pub fn customers(&self) -> CustomerList {
         let req = self.request(~"/v1/customers");
-        let res: CustomerList = Connection::fetch(req);
-
-        return res;
+        return Connection::fetch(req);
     }
 }
