@@ -4,10 +4,10 @@ libstripe_so = build.libstripe.timestamp
 
 all: $(libstripe_so)
 
-client: src/main.rs
+client: src/main.rs $(libstripe_so)
 	$(RUSTC) -o $@ $(RUST_FLAGS) -L build $<
 
-$(libstripe_so): Makefile
+$(libstripe_so): Makefile src/connection.rs src/lib.rs
 	mkdir -p build/
 	$(RUSTC) $(RUST_FLAGS) src/lib.rs --out-dir=build
 	@touch $@
