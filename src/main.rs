@@ -10,13 +10,15 @@ use std::str;
 use std::io::println;
 use url::{Url,UserInfo,Query};
 
+static EMPTY_QUERY: Query = vec!();
+
 static BASE_URL: Url = Url::new (
     ~"https",
     None,
     ~"api.stripe.com",
     None,
     ~"",
-    vec!(),
+    EMPTY_QUERY,
     None
 );
 
