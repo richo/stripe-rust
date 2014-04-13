@@ -2,6 +2,7 @@ RUST_FLAGS = -L ext/rust-http/build  -L ext/rust-openssl/build
 client: src/main.rs
 	rustc -o $@ $(RUST_FLAGS) $<
 
+# {{{ Setup submodules
 ext: ext/rust-http ext/rust-openssl ext-http
 
 ext/rust-http/configure:
@@ -23,3 +24,4 @@ ext/rust-http/Makefile: ext/rust-http/configure
 	cd ext/rust-http; ./configure
 
 .PHONY: ext ext-http ext-openssl
+# }}}
