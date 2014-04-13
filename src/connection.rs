@@ -3,11 +3,7 @@ extern crate http;
 
 use http::client::RequestWriter;
 use http::method::Get;
-use http::headers::HeaderEnum;
 use http::headers::request::ExtensionHeader;
-use std::os;
-use std::str;
-use std::io::println;
 use url::Url;
 
 type SecretKey = ~str;
