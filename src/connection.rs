@@ -1,6 +1,3 @@
-extern crate url;
-extern crate http;
-
 use http::client::RequestWriter;
 use http::method::Get;
 use http::headers::request::ExtensionHeader;
