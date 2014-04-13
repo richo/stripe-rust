@@ -8,7 +8,7 @@ use http::headers::HeaderEnum;
 use std::os;
 use std::str;
 use std::io::println;
-use url::{Url,UserInfo,Query};
+use url::{Url,UserInfo};
 
 fn authenticatedUrl() -> Url {
     let mut url: Url = from_str("https://api.stripe.com").unwrap();
