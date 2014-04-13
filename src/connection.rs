@@ -1,7 +1,10 @@
 use http::client::RequestWriter;
 use http::method::Get;
 use http::headers::request::ExtensionHeader;
+use customer::CustomerList;
+use decoder::Decoder;
 use url::Url;
+use serialize::{json,Decodable};
 
 type SecretKey = ~str;
 
@@ -27,7 +30,25 @@ impl Connection {
         return request;
     }
 
-    pub fn customers(&self) -> RequestWriter {
-        return self.request(~"/v1/customers");
+    fn fetch<T: Decodable<json::Decoder,json::Error>>(req: RequestWriter) -> T {
+        let mut response = match req.read_response() {
+            Ok(response) => response,
+            Err(err) => fail!("Something very bad has happened:"),
+        };
+        let body = match response.read_to_end() {
+            Ok(body) => body,
+            Err(err) => fail!("Something very bad has happened:"),
+        };
+
+        let object = Decoder::<T>::decode(body);
+
+        return object;
+    }
+
+    pub fn customers(&self) -> CustomerList {
+        let req = self.request(~"/v1/customers");
+        let res: CustomerList = Connection::fetch(req);
+
+        return res;
     }
 }
