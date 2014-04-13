@@ -14,4 +14,5 @@ pub mod connection;
 pub mod customer;
 pub mod subscription;
 pub mod card;
+mod enumerable;
 mod decoder;

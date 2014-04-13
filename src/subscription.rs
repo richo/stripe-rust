@@ -1,3 +1,5 @@
+use enumerable::Enumerable;
+
 #[deriving(Decodable,Show)]
 pub struct SubscriptionList {
     object: ~str,
@@ -8,3 +10,9 @@ pub struct SubscriptionList {
 
 #[deriving(Decodable,Show)]
 pub struct Subscription;
+
+impl Enumerable<Subscription> for SubscriptionList {
+    fn items(&self) -> ~[Subscription] {
+        return ~[];
+    }
+}

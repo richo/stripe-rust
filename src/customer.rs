@@ -1,7 +1,8 @@
 use collections::hashmap::HashMap;
-use std::slice::Items;
 use subscription::SubscriptionList;
 use card::CardList;
+use enumerable::Enumerable;
+
 // Decodable type from the API
 #[deriving(Decodable,Show)]
 pub struct CustomerList {
@@ -29,8 +30,8 @@ pub struct Customer {
     default_card: Option<~str>
 }
 
-impl CustomerList {
-    pub fn iter<'a>(&'a mut self) -> Items<'a, Customer> {
-        self.data.iter()
+impl Enumerable<Customer> for CustomerList {
+    fn items(&self) -> &[Customer] {
+        return self.data;
     }
 }
