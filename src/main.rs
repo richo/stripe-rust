@@ -1,28 +1,14 @@
 #![crate_id = "client"]
 
-extern crate url;
+extern crate stripe;
 extern crate http;
-use http::client::RequestWriter;
+use stripe::connection::Connection;
 use http::method::Get;
 use http::headers::HeaderEnum;
-use http::headers::request::ExtensionHeader;
+
 use std::os;
 use std::str;
 use std::io::println;
-use url::{Url,UserInfo};
-
-fn authenticatedUrl(path: ~str) -> Url {
-    let mut url: Url = from_str("https://api.stripe.com").unwrap();
-    url.user = Some(UserInfo { user: secretKey(), pass: None });
-    url.path = path;
-
-
-    return url;
-}
-
-fn secretKey() -> ~str {
-    return os::getenv("STRIPE_SECRET_KEY").expect("No STRIPE_SECRET_KEY set");
-}
 
 fn main() {
     format!("{}", Get);
@@ -38,9 +24,13 @@ fn main() {
 }
 
 fn make_and_print_request() {
-    let url = authenticatedUrl(~"/v1/customers");
-    let mut request: RequestWriter = RequestWriter::new(Get, url).unwrap();
-    request.headers.insert(ExtensionHeader(~"Authorization", format!("Bearer {}", secretKey())));
+    // let url = authenticatedUrl(~"/v1/customers");
+    // let mut request: RequestWriter = RequestWriter::new(Get, url).unwrap();
+    // request.headers.insert(ExtensionHeader(~"Authorization", format!("Bearer {}", secretKey())));
+
+    let secretKey: ~str = os::getenv("STRIPE_SECRET_KEY").expect("No STRIPE_SECRET_KEY set");
+    let conn = Connection::new(secretKey);
+    let request = conn.customers();
 
     println!("[33;1mRequest[0m");
     println!("[33;1m=======[0m");
