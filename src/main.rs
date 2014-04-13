@@ -1,14 +1,12 @@
 #![crate_id = "client"]
 
-extern crate url;
-extern crate http;
-use http::client::RequestWriter;
-use http::method::Get;
-use http::headers::HeaderEnum;
-use http::headers::request::ExtensionHeader;
+extern crate stripe;
+use stripe::connection::Connection;
+
 use std::os;
 use std::str;
 use std::io::println;
+
 use url::{Url,UserInfo};
 
 fn authenticatedUrl(path: ~str) -> Url {
