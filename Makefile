@@ -4,10 +4,10 @@ client: src/main.rs
 
 ext: ext/rust-http ext/rust-openssl ext-http
 
-ext/rust-http:
+ext/rust-http/configure:
 	git submodule update --init
 
-ext/rust-openssl:
+ext/rust-openssl/configure:
 	git submodule update --init
 
 ext-http: ext-openssl ext/rust-http/Makefile
@@ -16,10 +16,10 @@ ext-http: ext-openssl ext/rust-http/Makefile
 ext-openssl: ext/rust-openssl/Makefile
 	cd ext/rust-openssl; make
 
-ext/rust-openssl/Makefile:
+ext/rust-openssl/Makefile: ext/rust-openssl/configure
 	cd ext/rust-openssl; ./configure
 
-ext/rust-http/Makefile:
+ext/rust-http/Makefile: ext/rust-http/configure
 	cd ext/rust-http; ./configure
 
 .PHONY: ext ext-http ext-openssl
