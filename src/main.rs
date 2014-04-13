@@ -10,11 +10,15 @@ use std::str;
 use std::io::println;
 use url::{Url,UserInfo,Query};
 
-fn authenticatedUrl(apiKey: ~str) -> Url {
+fn authenticatedUrl() -> Url {
     let mut url: Url = from_str("https://api.stripe.com").unwrap();
-    url.user = Some(UserInfo { user: apiKey, pass: None });
+    url.user = Some(UserInfo { user: secretKey(), pass: None });
 
     return url;
+}
+
+fn secretKey() -> ~str {
+    return os::getenv("STRIPE_SECRET_KEY").expect("No STRIPE_SECRET_KEY set");
 }
 
 fn main() {
