@@ -2,9 +2,9 @@ RUSTC = rustc
 RUST_FLAGS = -L ext/rust-http/build  -L ext/rust-openssl/build
 libstripe_so = build.libstripe.timestamp
 
-all: client
+all: $(libstripe_so)
 
-client: src/main.rs $(libstripe_so)
+cli: example/cli.rs $(libstripe_so)
 	$(RUSTC) -o $@ $(RUST_FLAGS) -L build $<
 
 $(libstripe_so): Makefile src/connection.rs src/lib.rs
