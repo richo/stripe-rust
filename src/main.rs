@@ -5,14 +5,17 @@ extern crate http;
 use http::client::RequestWriter;
 use http::method::Get;
 use http::headers::HeaderEnum;
+use http::headers::request::ExtensionHeader;
 use std::os;
 use std::str;
 use std::io::println;
 use url::{Url,UserInfo};
 
-fn authenticatedUrl() -> Url {
+fn authenticatedUrl(path: ~str) -> Url {
     let mut url: Url = from_str("https://api.stripe.com").unwrap();
     url.user = Some(UserInfo { user: secretKey(), pass: None });
+    url.path = path;
+
 
     return url;
 }
@@ -26,7 +29,7 @@ fn main() {
     let args = os::args();
     match args.len() {
         0 => unreachable!(),
-        2 => make_and_print_request(args[1]),
+        1 => make_and_print_request(),
         _ => {
             println!("Usage: {} URL", args[0]);
             return;
@@ -34,9 +37,10 @@ fn main() {
     };
 }
 
-fn make_and_print_request(url: ~str) {
-    let request: RequestWriter = RequestWriter::new(Get, from_str(url).expect("Invalid URL :-("))
-                                              .unwrap();
+fn make_and_print_request() {
+    let url = authenticatedUrl(~"/v1/customers");
+    let mut request: RequestWriter = RequestWriter::new(Get, url).unwrap();
+    request.headers.insert(ExtensionHeader(~"Authorization", format!("Bearer {}", secretKey())));
 
     println!("[33;1mRequest[0m");
     println!("[33;1m=======[0m");
