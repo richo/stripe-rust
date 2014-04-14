@@ -33,5 +33,9 @@ ext/rust-openssl/Makefile: ext/rust-openssl/configure
 ext/rust-http/Makefile: ext/rust-http/configure
 	cd ext/rust-http; ./configure
 
-.PHONY: ext ext-http ext-openssl
+ext-clean:
+	cd ext/rust-http; make clean
+	cd ext/rust-openssl; make clean
+
+.PHONY: ext ext-http ext-openssl ext-clean
 # }}}
