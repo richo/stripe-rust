@@ -40,7 +40,7 @@ impl Connection {
         };
         let body = match response.read_to_end() {
             Ok(body) => body,
-            Err(err) => fail!("Something very bad has happened:"),
+            Err(err) => fail!("Something very bad has happened: {}", err),
         };
 
         let object = Decoder::<T>::decode(body);
