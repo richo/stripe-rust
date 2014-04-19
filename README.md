@@ -13,4 +13,4 @@ isn't a dependency by default to allow for other configurations.
 
 stripe-rust is tracking rust master, on a totally ad-hoc "As I happen to rebuild rust" fashion.
 
-The last knowngood revision is: mozilla/rust@2f790546504f869788f3c0e9585b51470773332f
+The last knowngood revision is: mozilla/rust@59f4619
