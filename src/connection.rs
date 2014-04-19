@@ -26,7 +26,9 @@ impl Connection {
         let mut url = self.baseUrl.clone();
         url.path = path;
         let mut request: RequestWriter = RequestWriter::new(Get, url).unwrap();
-        request.headers.insert(ExtensionHeader(~"Authorization", format!("Bearer {}", self.secretKey)));
+        let mut auth = StrBuf::from_str("Bearer ");
+        auth.push_str(self.secretKey);
+        request.headers.insert(ExtensionHeader(StrBuf::from_str("Authorization"), auth));
 
         return request;
     }
