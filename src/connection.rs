@@ -49,12 +49,12 @@ impl Connection {
     }
 
     pub fn customers(&self) -> CustomerList {
-        let req = self.request(~"/v1/customers");
+        let req = self.request("/v1/customers".to_owned());
         return Connection::fetch(req);
     }
 
     pub fn cards(&self) -> CardList {
-        let req = self.request(~"/v1/cards");
+        let req = self.request("/v1/cards".to_owned());
         return Connection::fetch(req);
     }
 

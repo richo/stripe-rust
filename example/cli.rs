@@ -39,9 +39,9 @@ fn fetch_and_print_records(typ: ~str) {
     let secretKey: ~str = os::getenv("STRIPE_SECRET_KEY").expect("No STRIPE_SECRET_KEY set");
     let conn = Connection::new(secretKey);
 
-    if typ == ~"customers" {
+    if typ == "customers".to_owned() {
         print_records(conn.customers().data.iter());
-    } else if typ == ~"cards" {
+    } else if typ == "cards".to_owned() {
         print_records(conn.cards().data.iter());
     } else {
         usage();
