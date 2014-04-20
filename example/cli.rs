@@ -17,7 +17,6 @@ fn usage() {
 }
 
 fn main() {
-    format!("{}", Get);
     let args = os::args();
     match args.len() {
         0 => unreachable!(),
