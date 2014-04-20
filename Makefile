@@ -1,16 +1,32 @@
 RUSTC = rustc
 RUST_FLAGS = -L ext/rust-http/build  -L ext/rust-openssl/build
+EXAMPLES = bin/cli
+EXAMPLES_DIR = bin
+BUILD_DIR = build
 libstripe_so = build.libstripe.timestamp
 
 all: $(libstripe_so)
 
-cli: example/cli.rs $(libstripe_so)
-	$(RUSTC) -o $@ $(RUST_FLAGS) -L build $<
+examples: $(EXAMPLES)
+
+$(EXAMPLES_DIR)/%: example/%.rs $(libstripe_so) $(EXAMPLES_DIR)
+	$(RUSTC) -o $@ $(RUST_FLAGS) -L $(BUILD_DIR) $<
 
 $(libstripe_so): Makefile $(wildcard src/*.rs)
 	mkdir -p build/
 	$(RUSTC) $(RUST_FLAGS) src/lib.rs --out-dir=build
 	@touch $@
+
+clean:
+	rm -f $(libstripe_so)
+	rm -f $(EXAMPLES)
+	rm -rf $(BUILD_DIR)
+
+$(EXAMPLES_DIR):
+	mkdir -p $@
+
+
+.PHONY: clean
 
 # {{{ Setup submodules
 ext: ext/rust-http ext/rust-openssl ext-http
