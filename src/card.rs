@@ -8,23 +8,23 @@ pub struct CardList {
 
 #[deriving(Decodable,Show)]
 pub struct Card {
-    object: ~str,
     id: ~str,
+    object: ~str,
     last4: ~str,
+    // type: ~str
     exp_month: uint,
     exp_year: uint,
     fingerprint: ~str,
-    customer: Option<~str>, // Customerlist, but I'm not sure how that works
-                            // with circular references
+    customer: ~str,
     country: ~str,
-    name: Option<~str>,
+    name: ~str,
     address_line1: Option<~str>,
     address_line2: Option<~str>,
     address_city: Option<~str>,
     address_state: Option<~str>,
     address_zip: Option<~str>,
     address_country: Option<~str>,
-    cvc_check: ~str,
-    address_line1_check: ~str,
-    address_zip_check: ~str
+    cvc_check: Option<~str>,
+    address_line1_check: Option<~str>,
+    address_zip_check: Option<~str>
 }
