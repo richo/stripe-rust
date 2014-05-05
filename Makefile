@@ -1,6 +1,6 @@
 RUSTC = rustc
 RUST_FLAGS = -L ext/rust-http/build  -L ext/rust-openssl/build
-EXAMPLES = bin/cli
+EXAMPLES = bin/customers
 EXAMPLES_DIR = bin
 BUILD_DIR = build
 libstripe_so = build.libstripe.timestamp
