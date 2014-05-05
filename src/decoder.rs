@@ -4,7 +4,7 @@ use serialize::{json,Decodable};
 
 pub struct Decoder<T>;
 
-impl<T: Decodable<json::Decoder,json::Error>> Decoder<T> {
+impl<T: Decodable<json::Decoder,json::DecoderError>> Decoder<T> {
     pub fn decode(data: Vec<u8>) -> T {
         let data = str::from_utf8(data.as_slice());
 

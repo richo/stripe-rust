@@ -33,7 +33,7 @@ impl Connection {
         return request;
     }
 
-    fn fetch<T: Decodable<json::Decoder,json::Error>>(req: RequestWriter) -> T {
+    fn fetch<T: Decodable<json::Decoder,json::DecoderError>>(req: RequestWriter) -> T {
         let mut response = match req.read_response() {
             Ok(response) => response,
             Err(err) => fail!("Something very bad has happened:"),
