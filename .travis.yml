@@ -6,3 +6,5 @@ install:
 script:
   - make ext
   - make examples
+notifications:
+  email: false
