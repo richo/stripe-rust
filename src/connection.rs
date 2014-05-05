@@ -1,7 +1,8 @@
+use std::strbuf::StrBuf;
 use http::client::RequestWriter;
 use http::method::Get;
 use http::headers::request::ExtensionHeader;
-use customer::CustomerList;
+use customer::{CustomerList,CustomerId};
 use card::CardList;
 use decoder::Decoder;
 use url::Url;
@@ -22,9 +23,9 @@ impl Connection {
         };
     }
 
-    fn request(&self, path: ~str) -> RequestWriter {
+    fn request(&self, path: StrBuf) -> RequestWriter {
         let mut url = self.baseUrl.clone();
-        url.path = path;
+        url.path = path.into_owned();
         let mut request: RequestWriter = RequestWriter::new(Get, url).unwrap();
         let mut auth = StrBuf::from_str("Bearer ");
         auth.push_str(self.secretKey);
@@ -49,12 +50,15 @@ impl Connection {
     }
 
     pub fn customers(&self) -> CustomerList {
-        let req = self.request("/v1/customers".to_owned());
+        let req = self.request(StrBuf::from_str("/v1/customers"));
         return Connection::fetch(req);
     }
 
-    pub fn cards(&self) -> CardList {
-        let req = self.request("/v1/cards".to_owned());
+    pub fn cards(&self, customer: CustomerId) -> CardList {
+        let mut url = StrBuf::from_str("/v1/cards/");
+        url.push_str(customer);
+        url.push_str("/cards");
+        let req = self.request(url);
         return Connection::fetch(req);
     }
 
