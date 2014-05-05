@@ -2,6 +2,9 @@ use collections::hashmap::HashMap;
 use std::slice::Items;
 use subscription::SubscriptionList;
 use card::CardList;
+
+pub type CustomerId = ~str;
+
 // Decodable type from the API
 #[deriving(Decodable,Show)]
 pub struct CustomerList {
@@ -15,7 +18,7 @@ pub struct CustomerList {
 pub struct Customer {
     object: ~str,
     created: uint,
-    id: ~str, // TODO typeclass for stripe ID's?
+    id: CustomerId,
     livemode: bool,
     description: Option<~str>,
     email: Option<~str>,
