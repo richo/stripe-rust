@@ -1,4 +1,4 @@
-#![crate_id = "customers"]
+#[crate_id = "customers"]
 
 extern crate stripe;
 extern crate http;
