@@ -4,6 +4,7 @@ extern crate stripe;
 extern crate http;
 
 use std::io;
+use stripe::card::CardNumber;
 
 fn input(prompt: &'static str) -> ~str {
     let mut output = io::stdout();
@@ -20,4 +21,10 @@ fn input(prompt: &'static str) -> ~str {
 
 fn main() {
     let cc_no = input("CC no: ");
+    let cc_no = cc_no.trim();
+
+    match CardNumber::new(cc_no) {
+        Some(cc) => println!("Got: {}", cc),
+        None => println!("ohnoes")
+    }
 }
