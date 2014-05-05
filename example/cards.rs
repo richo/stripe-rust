@@ -3,7 +3,6 @@
 extern crate stripe;
 extern crate http;
 use stripe::connection::Connection;
-use http::method::Get;
 
 use std::os;
 use std::fmt::Show;
