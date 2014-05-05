@@ -55,7 +55,7 @@ impl Connection {
     }
 
     pub fn cards(&self, customer: CustomerId) -> CardList {
-        let mut url = StrBuf::from_str("/v1/cards/");
+        let mut url = StrBuf::from_str("/v1/customers/");
         url.push_str(customer);
         url.push_str("/cards");
         let req = self.request(url);
