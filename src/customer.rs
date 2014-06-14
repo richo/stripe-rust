@@ -1,35 +1,35 @@
-use collections::hashmap::HashMap;
+use std::collections::hashmap::HashMap;
 use std::slice::Items;
 use subscription::SubscriptionList;
 use card::CardList;
 
-pub type CustomerId = ~str;
+pub type CustomerId = String;
 
 // Decodable type from the API
 #[deriving(Decodable,Show)]
 pub struct CustomerList {
-    object: ~str,
+    object: String,
     has_more: bool,
-    url: ~str,
+    url: String,
     pub data: ~[Customer]
 }
 
 #[deriving(Decodable,Show)]
 pub struct Customer {
-    object: ~str,
+    object: String,
     created: uint,
     id: CustomerId,
     livemode: bool,
-    description: Option<~str>,
-    email: Option<~str>,
+    description: Option<String>,
+    email: Option<String>,
     delinquent: bool,
-    metadata: HashMap<~str,~str>, // FIXME This is a blatant lie.
+    metadata: HashMap<String,String>, // FIXME This is a blatant lie.
     subscriptions: SubscriptionList,
-    discount: Option<~str>,
+    discount: Option<String>,
     account_balance: f64,
-    currency: Option<~str>,
+    currency: Option<String>,
     cards: CardList,
-    default_card: Option<~str>
+    default_card: Option<String>
 }
 
 impl CustomerList {

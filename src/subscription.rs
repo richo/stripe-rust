@@ -1,8 +1,8 @@
 #[deriving(Decodable,Show)]
 pub struct SubscriptionList {
-    object: ~str,
+    object: String,
     has_more: bool,
-    url: ~str,
+    url: String,
     data: ~[Subscription]
 }
 

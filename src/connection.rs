@@ -1,4 +1,4 @@
-use std::strbuf::StrBuf;
+use std::string::String;
 use http::client::RequestWriter;
 use http::method::Get;
 use http::headers::request::ExtensionHeader;
@@ -8,7 +8,7 @@ use decoder::Decoder;
 use url::Url;
 use serialize::{json,Decodable};
 
-type SecretKey = ~str;
+type SecretKey = String;
 
 pub struct Connection {
     baseUrl: Url,
@@ -16,20 +16,20 @@ pub struct Connection {
 }
 
 impl Connection {
-    pub fn new(secretKey: ~str) -> Connection {
+    pub fn new(secretKey: String) -> Connection {
         return Connection {
             baseUrl: from_str("https://api.stripe.com").unwrap(),
             secretKey: secretKey
         };
     }
 
-    fn request(&self, path: StrBuf) -> RequestWriter {
+    fn request(&self, path: String) -> RequestWriter {
         let mut url = self.baseUrl.clone();
         url.path = path.into_owned();
         let mut request: RequestWriter = RequestWriter::new(Get, url).unwrap();
-        let mut auth = StrBuf::from_str("Bearer ");
-        auth.push_str(self.secretKey);
-        request.headers.insert(ExtensionHeader(StrBuf::from_str("Authorization"), auth));
+        let mut auth = String::from_str("Bearer ");
+        auth.push_str(self.secretKey.as_slice());
+        request.headers.insert(ExtensionHeader(String::from_str("Authorization"), auth));
 
         return request;
     }
@@ -50,13 +50,13 @@ impl Connection {
     }
 
     pub fn customers(&self) -> CustomerList {
-        let req = self.request(StrBuf::from_str("/v1/customers"));
+        let req = self.request(String::from_str("/v1/customers"));
         return Connection::fetch(req);
     }
 
     pub fn cards(&self, customer: CustomerId) -> CardList {
-        let mut url = StrBuf::from_str("/v1/customers/");
-        url.push_str(customer);
+        let mut url = String::from_str("/v1/customers/");
+        url.push_str(customer.as_slice());
         url.push_str("/cards");
         let req = self.request(url);
         return Connection::fetch(req);
