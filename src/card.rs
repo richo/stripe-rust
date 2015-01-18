@@ -1,13 +1,13 @@
 use std::fmt;
 
-static CARD_NO_LEN: uint = 16;
+static CARD_NO_LEN: usize = 16;
 
 #[deriving(Decodable,Show)]
 pub struct CardList {
     object: String,
     has_more: bool,
     url: String,
-    pub data: ~[Card]
+    pub data: Card
 }
 
 #[deriving(Decodable,Show)]
@@ -16,8 +16,8 @@ pub struct Card {
     object: String,
     last4: String,
     // type: String
-    exp_month: uint,
-    exp_year: uint,
+    exp_month: usize,
+    exp_year: usize,
     fingerprint: String,
     customer: String,
     country: String,
@@ -34,7 +34,7 @@ pub struct Card {
 }
 
 pub struct CardNumber {
-    x: [u8, ..CARD_NO_LEN]
+    x: Vec::with_capacity(CARD_NO_LEN)
 }
 
 impl fmt::Show for CardNumber {

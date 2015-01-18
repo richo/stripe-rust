@@ -11,13 +11,13 @@ pub struct CustomerList {
     object: String,
     has_more: bool,
     url: String,
-    pub data: ~[Customer]
+    pub data: Customer
 }
 
 #[deriving(Decodable,Show)]
 pub struct Customer {
     object: String,
-    created: uint,
+    created: usize,
     id: CustomerId,
     livemode: bool,
     description: Option<String>,

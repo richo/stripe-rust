@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/richo/stripe-rust.svg)](https://travis-ci.org/richo/stripe-rust)
+
 rust bindings for Stripe
 ========================
 
@@ -14,3 +16,7 @@ isn't a dependency by default to allow for other configurations.
 stripe-rust is tracking rust master, on a totally ad-hoc "As I happen to rebuild rust" fashion.
 
 The last knowngood revision is: mozilla/rust@59f4619
+
+
+# Run make locally as a developer
+```make -L ext```
