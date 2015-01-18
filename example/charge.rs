@@ -15,7 +15,7 @@ fn input(prompt: &'static str) -> ~str {
 
     match reader.read_line() {
         Ok(line) => line,
-        Err(err) => fail!("Error: {}", err)
+        Err(err) => panic!("Error: {}", err)
     }
 }
 

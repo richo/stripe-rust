@@ -13,7 +13,7 @@ impl<T: Decodable<json::Decoder,json::DecoderError>> Decoder<T> {
 
         let decoded: T = match Decodable::decode(&mut decoder) {
             Ok(v) => v,
-            Err(e) => fail!("Decoding error: {}", e)
+            Err(e) => panic!("Decoding error: {}", e)
         };
 
         return decoded;
