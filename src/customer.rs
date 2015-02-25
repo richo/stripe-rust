@@ -6,18 +6,18 @@ use card::CardList;
 pub type CustomerId = String;
 
 // Decodable type from the API
-#[deriving(Decodable,Show)]
+#[derive(RustcDecodable,Debug)]
 pub struct CustomerList {
     object: String,
     has_more: bool,
     url: String,
-    pub data: ~[Customer]
+    pub data: Vec<Customer>
 }
 
-#[deriving(Decodable,Show)]
+#[derive(RustcDecodable,Debug)]
 pub struct Customer {
     object: String,
-    created: uint,
+    created: usize,
     id: CustomerId,
     livemode: bool,
     description: Option<String>,

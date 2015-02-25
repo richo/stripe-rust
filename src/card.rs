@@ -1,23 +1,23 @@
 use std::fmt;
 
-static CARD_NO_LEN: uint = 16;
+static CARD_NO_LEN: usize = 16;
 
-#[deriving(Decodable,Show)]
+#[derive(RustcDecodable,Debug)]
 pub struct CardList {
     object: String,
     has_more: bool,
     url: String,
-    pub data: ~[Card]
+    pub data: Vec<Card>,
 }
 
-#[deriving(Decodable,Show)]
+#[derive(RustcDecodable,Debug)]
 pub struct Card {
     id: String,
     object: String,
     last4: String,
     // type: String
-    exp_month: uint,
-    exp_year: uint,
+    exp_month: usize,
+    exp_year: usize,
     fingerprint: String,
     customer: String,
     country: String,
@@ -34,10 +34,10 @@ pub struct Card {
 }
 
 pub struct CardNumber {
-    x: [u8, ..CARD_NO_LEN]
+    x: [u8; CARD_NO_LEN]
 }
 
-impl fmt::Show for CardNumber {
+impl fmt::Debug for CardNumber {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // // TODO This doens't actually format properly
         self.x.as_slice().fmt(f)

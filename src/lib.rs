@@ -1,7 +1,5 @@
-#![crate_id = "stripe#0.0-pre"]
+#![crate_id = "stripe"]
 
-#![comment = "Stripe API Bindings"]
-#![license = "MIT"]
 #![crate_type = "dylib"]
 #![crate_type = "rlib"]
 

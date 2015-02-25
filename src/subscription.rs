@@ -1,10 +1,10 @@
-#[deriving(Decodable,Show)]
+#[derive(RustcDecodable,Debug)]
 pub struct SubscriptionList {
     object: String,
     has_more: bool,
     url: String,
-    data: ~[Subscription]
+    data: Vec<Subscription>
 }
 
-#[deriving(Decodable,Show)]
+#[derive(RustcDecodable,Debug)]
 pub struct Subscription;
