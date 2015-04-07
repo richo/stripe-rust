@@ -1,7 +1,7 @@
-use std::collections::hashmap::HashMap;
-use std::slice::Items;
+use std::collections::HashMap;
 use subscription::SubscriptionList;
 use card::CardList;
+use std::iter::{IntoIterator};
 
 pub type CustomerId = String;
 
@@ -32,8 +32,4 @@ pub struct Customer {
     default_card: Option<String>
 }
 
-impl CustomerList {
-    pub fn iter<'a>(&'a mut self) -> Items<'a, Customer> {
-        self.data.iter()
-    }
-}
+iterable!(Customer);
