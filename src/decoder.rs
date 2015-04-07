@@ -1,6 +1,5 @@
 use std::str;
 use std::vec::Vec;
-use std::marker::PhantomData;
 use rustc_serialize::Decodable;
 use rustc_serialize::json;
 

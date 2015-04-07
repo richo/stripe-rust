@@ -14,8 +14,8 @@ use rustc_serialize::Decodable;
 type SecretKey = String;
 
 pub struct Connection {
-    baseUrl: Url,
-    secretKey: SecretKey
+    base_url: Url,
+    secret_key: SecretKey
 }
 
 macro_rules! urlify {
@@ -25,19 +25,19 @@ macro_rules! urlify {
 }
 
 impl Connection {
-    pub fn new(secretKey: String) -> Connection {
+    pub fn new(secret_key: String) -> Connection {
         return Connection {
-            baseUrl: Url::parse("https://api.stripe.com").unwrap(),
-            secretKey: secretKey
+            base_url: Url::parse("https://api.stripe.com").unwrap(),
+            secret_key: secret_key
         };
     }
 
     fn request(&self, mut path: Vec<String>) -> Request<Fresh> {
-        let mut url = self.baseUrl.clone();
+        let mut url = self.base_url.clone();
         url.path_mut().unwrap().append(&mut path);
         let mut request = Request::new(Get, url).unwrap();
         let mut auth = "Bearer ".to_string();
-        auth.push_str(self.secretKey.as_slice());
+        auth.push_str(&self.secret_key[..]);
         request.headers_mut().set(Authorization(auth));
 
         return request;
@@ -48,7 +48,7 @@ impl Connection {
         let mut response = try!(connection.send());
 
         let mut body = vec![];
-        let bytes = try!(response.read_to_end(&mut body));
+        let _ = try!(response.read_to_end(&mut body));
 
         let object: T = StripeDecoder::decode(body);
 
@@ -61,7 +61,7 @@ impl Connection {
     }
 
     pub fn cards(&self, customer: CustomerId) -> Result<CardList, HttpError> {
-        let req = self.request(urlify!("v1", "customers", customer.as_slice(), "cards"));
+        let req = self.request(urlify!("v1", "customers", customer, "cards"));
         return Connection::fetch(req);
     }
 

@@ -1,5 +1,4 @@
 #![feature(collections)]
-#![feature(core)]
 #![feature(convert)]
 
 extern crate hyper;
@@ -22,7 +21,7 @@ macro_rules! iterable {
 
     // This is a stopgap until I work out how2IntoIterator
         impl $collection {
-            fn into_iter(self) -> ::collections::vec::IntoIter<$name> {
+            pub fn into_iter(self) -> ::collections::vec::IntoIter<$name> {
                 self.data.into_iter()
             }
         }

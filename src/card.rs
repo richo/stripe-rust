@@ -40,7 +40,7 @@ pub struct CardNumber {
 impl fmt::Debug for CardNumber {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         // // TODO This doens't actually format properly
-        self.x.as_slice().fmt(f)
+        self.x.fmt(f)
     }
 }
 
