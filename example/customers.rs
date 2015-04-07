@@ -1,23 +1,20 @@
-#![crate_id = "customers"]
-
+#![feature(slice_patterns)]
 extern crate stripe;
-extern crate http;
 use stripe::connection::Connection;
 
-use std::os;
-use std::fmt::Show;
+use std::env;
 
 fn usage() {
-    let args = os::args();
+    let args: Vec<_> = env::args().collect();
     println!("Usage: {} [customer_id]", args[0]);
 }
 
 fn main() {
-    let args = os::args();
-    match args.len() {
-        0 => unreachable!(),
-        1 => fetch_and_print_customers(),
-        2 => fetch_and_print_customer(args[1]),
+    let args: Vec<_> = env::args().collect();
+    match &args[..] {
+        [] => unreachable!(),
+        [_] => fetch_and_print_customers(),
+        [_, ref cus] => fetch_and_print_customer(cus),
         _ => {
             usage();
             return;
@@ -25,23 +22,18 @@ fn main() {
     };
 }
 
-fn print_records<T: Show, I: Iterator<T>>(mut iter: I) {
-    for i in iter {
-        println!("{}", i);
-    }
-}
-
 fn get_conn() -> Connection {
-    let secretKey: ~str = os::getenv("STRIPE_SECRET_KEY").expect("No STRIPE_SECRET_KEY set");
-    return Connection::new(secretKey);
+    let secret_key: String = env::var("STRIPE_SECRET_KEY").ok().expect("No STRIPE_SECRET_KEY set");
+    return Connection::new(secret_key);
 }
 
 fn fetch_and_print_customers() {
     let conn = get_conn();
-    print_records(conn.customers().data.iter());
+    for i in conn.customers().into_iter() {
+        println!("{:?}", i);
+    }
 }
 
-fn fetch_and_print_customer(id: ~str) {
-    println!("Unimplemented!");
-    os::set_exit_status(1);
+fn fetch_and_print_customer(id: &String) {
+    panic!("Unimplemented!");
 }
