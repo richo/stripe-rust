@@ -3,6 +3,10 @@ name = "stripe"
 version = "0.0.1"
 authors = ["Richo Healey <richo@psych0tik.net>"]
 
+repository = "https://github.com/richo/stripe-rust"
+description = "bindings to the stripe api"
+license = "MIT"
+
 [dependencies]
 hyper = "*"
 url = "*"
