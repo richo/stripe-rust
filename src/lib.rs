@@ -1,9 +1,6 @@
 #![crate_id = "stripe"]
 
-#![crate_type = "dylib"]
-#![crate_type = "rlib"]
-
-extern crate http;
+extern crate hyper;
 extern crate url;
 extern crate serialize;
 extern crate collections;
