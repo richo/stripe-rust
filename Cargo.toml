@@ -6,3 +6,4 @@ authors = ["Richo Healey <richo@psych0tik.net>"]
 [dependencies]
 hyper = "*"
 url = "*"
+rustc-decodable = "*"
