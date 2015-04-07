@@ -1,0 +1,8 @@
+[package]
+name = "stripe"
+version = "0.0.1"
+authors = ["Richo Healey <richo@psych0tik.net>"]
+
+[dependencies]
+hyper = "*"
+url = "*"
