@@ -1,8 +1,8 @@
 use std::fmt;
 
-static CARD_NO_LEN: usize = 16;
+const CARD_NO_LEN: usize = 16;
 
-#[derive(RustcDecodable,Debug)]
+#[derive(Decodable,RustcDecodable,Debug)]
 pub struct CardList {
     object: String,
     has_more: bool,
@@ -10,7 +10,7 @@ pub struct CardList {
     pub data: Vec<Card>,
 }
 
-#[derive(RustcDecodable,Debug)]
+#[derive(Decodable,RustcDecodable,Debug)]
 pub struct Card {
     id: String,
     object: String,
@@ -62,7 +62,7 @@ fn char2int(c: char) -> Option<u8> {
 
 impl CardNumber {
     pub fn new(cc: &str) -> Option<CardNumber> {
-        let mut numbers = [0u8, ..CARD_NO_LEN];
+        let mut numbers = [0u8; CARD_NO_LEN];
         if cc.len() != CARD_NO_LEN {
             return None;
         }

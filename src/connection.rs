@@ -1,12 +1,15 @@
 use std::string::String;
-use http::client::RequestWriter;
-use http::method::Get;
-use http::headers::request::ExtensionHeader;
+use std::io::Read;
 use customer::{CustomerList,CustomerId};
 use card::CardList;
-use decoder::Decoder;
+use decoder::StripeDecoder;
 use url::Url;
 use serialize::{json,Decodable};
+use hyper::client::Request;
+use hyper::net::Fresh;
+use hyper::Get;
+use hyper::header::Authorization;
+use hyper::error::HttpError;
 
 type SecretKey = String;
 
@@ -15,50 +18,50 @@ pub struct Connection {
     secretKey: SecretKey
 }
 
+macro_rules! urlify {
+    ($($component:expr),*) => {
+        vec![$($component.to_string()),*]
+    }
+}
+
 impl Connection {
     pub fn new(secretKey: String) -> Connection {
         return Connection {
-            baseUrl: from_str("https://api.stripe.com").unwrap(),
+            baseUrl: Url::parse("https://api.stripe.com").unwrap(),
             secretKey: secretKey
         };
     }
 
-    fn request(&self, path: String) -> RequestWriter {
+    fn request(&self, mut path: Vec<String>) -> Request<Fresh> {
         let mut url = self.baseUrl.clone();
-        url.path = path.into_owned();
-        let mut request: RequestWriter = RequestWriter::new(Get, url).unwrap();
-        let mut auth = String::from_str("Bearer ");
+        url.path_mut().unwrap().append(&mut path);
+        let mut request = Request::new(Get, url).unwrap();
+        let mut auth = "Bearer ".to_string();
         auth.push_str(self.secretKey.as_slice());
-        request.headers.insert(ExtensionHeader(String::from_str("Authorization"), auth));
+        request.headers_mut().set(Authorization(auth));
 
         return request;
     }
 
-    fn fetch<T: Decodable<json::Decoder,json::DecoderError>>(req: RequestWriter) -> T {
-        let mut response = match req.read_response() {
-            Ok(response) => response,
-            Err(_) => panic!("Something very bad has happened:"),
-        };
-        let body = match response.read_to_end() {
-            Ok(body) => body,
-            Err(err) => panic!("Something very bad has happened: {}", err),
-        };
+    fn fetch<T: Decodable>(req: Request<Fresh>) -> Result<T, HttpError> {
+        let connection = try!(req.start());
+        let mut response = try!(connection.send());
 
-        let object = Decoder::<T>::decode(body);
+        let mut body = vec![];
+        let bytes = try!(response.read_to_end(&mut body));
 
-        return object;
+        let object: T = StripeDecoder::decode(body);
+
+        return Ok(object);
     }
 
-    pub fn customers(&self) -> CustomerList {
-        let req = self.request(String::from_str("/v1/customers"));
+    pub fn customers(&self) -> Result<CustomerList, HttpError> {
+        let req = self.request(urlify!("v1", "customers"));
         return Connection::fetch(req);
     }
 
-    pub fn cards(&self, customer: CustomerId) -> CardList {
-        let mut url = String::from_str("/v1/customers/");
-        url.push_str(customer.as_slice());
-        url.push_str("/cards");
-        let req = self.request(url);
+    pub fn cards(&self, customer: CustomerId) -> Result<CardList, HttpError> {
+        let req = self.request(urlify!("v1", "customers", customer.as_slice(), "cards"));
         return Connection::fetch(req);
     }
 

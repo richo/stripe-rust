@@ -1,10 +1,12 @@
 use std::str;
 use std::vec::Vec;
 use serialize::{json,Decodable};
+use std::marker::PhantomData;
 
-pub struct Decoder<T>;
+pub struct StripeDecoder<T>(T);
 
-impl<T: Decodable<json::Decoder,json::DecoderError>> Decoder<T> {
+impl<T: Decodable> StripeDecoder<T> {
+    // TODO this should be a Result
     pub fn decode(data: Vec<u8>) -> T {
         let data = str::from_utf8(data.as_slice());
 

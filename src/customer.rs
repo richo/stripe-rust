@@ -6,7 +6,7 @@ use std::iter::{IntoIterator};
 pub type CustomerId = String;
 
 // Decodable type from the API
-#[derive(RustcDecodable,Debug)]
+#[derive(Decodable,RustcDecodable,Debug)]
 pub struct CustomerList {
     object: String,
     has_more: bool,
@@ -14,7 +14,7 @@ pub struct CustomerList {
     pub data: Vec<Customer>
 }
 
-#[derive(RustcDecodable,Debug)]
+#[derive(Decodable,RustcDecodable,Debug)]
 pub struct Customer {
     object: String,
     created: usize,
@@ -32,4 +32,4 @@ pub struct Customer {
     default_card: Option<String>
 }
 
-iterable!(Customer);
+iterable!(CustomerList, Customer);
