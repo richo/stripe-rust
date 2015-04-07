@@ -1,4 +1,6 @@
-#![crate_id = "stripe"]
+#![feature(collections)]
+#![feature(core)]
+#![feature(convert)]
 
 extern crate hyper;
 extern crate rustc_serialize;
