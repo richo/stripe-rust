@@ -4,12 +4,12 @@ use customer::{CustomerList,CustomerId};
 use card::CardList;
 use decoder::StripeDecoder;
 use url::Url;
-use serialize::{json,Decodable};
 use hyper::client::Request;
 use hyper::net::Fresh;
 use hyper::Get;
 use hyper::header::Authorization;
 use hyper::error::HttpError;
+use rustc_serialize::Decodable;
 
 type SecretKey = String;
 

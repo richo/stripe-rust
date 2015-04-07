@@ -3,7 +3,6 @@
 extern crate hyper;
 extern crate rustc_serialize;
 extern crate url;
-extern crate serialize;
 extern crate collections;
 
 macro_rules! iterable {

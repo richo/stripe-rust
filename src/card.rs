@@ -2,7 +2,7 @@ use std::fmt;
 
 const CARD_NO_LEN: usize = 16;
 
-#[derive(Decodable,RustcDecodable,Debug)]
+#[derive(RustcDecodable,Debug)]
 pub struct CardList {
     object: String,
     has_more: bool,
@@ -10,7 +10,7 @@ pub struct CardList {
     pub data: Vec<Card>,
 }
 
-#[derive(Decodable,RustcDecodable,Debug)]
+#[derive(RustcDecodable,Debug)]
 pub struct Card {
     id: String,
     object: String,

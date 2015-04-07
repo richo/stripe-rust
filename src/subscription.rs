@@ -1,4 +1,4 @@
-#[derive(Decodable,RustcDecodable,Debug)]
+#[derive(RustcDecodable,Debug)]
 pub struct SubscriptionList {
     object: String,
     has_more: bool,
@@ -6,5 +6,5 @@ pub struct SubscriptionList {
     data: Vec<Subscription>
 }
 
-#[derive(Decodable,RustcDecodable,Debug)]
+#[derive(RustcDecodable,Debug)]
 pub struct Subscription;

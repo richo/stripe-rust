@@ -1,7 +1,8 @@
 use std::str;
 use std::vec::Vec;
-use serialize::{json,Decodable};
 use std::marker::PhantomData;
+use rustc_serialize::Decodable;
+use rustc_serialize::json;
 
 pub struct StripeDecoder<T>(T);
 
@@ -10,10 +11,7 @@ impl<T: Decodable> StripeDecoder<T> {
     pub fn decode(data: Vec<u8>) -> T {
         let data = str::from_utf8(data.as_slice());
 
-        let object = json::from_str(data.unwrap());
-        let mut decoder = json::Decoder::new(object.unwrap());
-
-        let decoded: T = match Decodable::decode(&mut decoder) {
+        let decoded: T = match json::decode(data.unwrap()) {
             Ok(v) => v,
             Err(e) => panic!("Decoding error: {}", e)
         };
