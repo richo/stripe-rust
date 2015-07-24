@@ -1,8 +1,9 @@
 use std::string::String;
+use std::io;
 use std::io::Read;
 use customer::{CustomerList,CustomerId};
 use card::CardList;
-use decoder::StripeDecoder;
+use decoder::{StripeDecoder,StripeDecoderError};
 use url::Url;
 use hyper::client::Request;
 use hyper::net::Fresh;
@@ -24,6 +25,12 @@ macro_rules! urlify {
     }
 }
 
+pub enum StripeError {
+    TransportError(HttpError),
+    DecodingError(StripeDecoderError),
+    IOError(io::Error),
+}
+
 impl Connection {
     pub fn new(secret_key: String) -> Connection {
         return Connection {
@@ -43,24 +50,36 @@ impl Connection {
         return request;
     }
 
-    fn fetch<T: Decodable>(req: Request<Fresh>) -> Result<T, HttpError> {
-        let connection = try!(req.start());
-        let mut response = try!(connection.send());
+    fn fetch<T: Decodable>(req: Request<Fresh>) -> Result<T, StripeError> {
+        let connection = match req.start() {
+            Ok(o) => o,
+            Err(e) => return Err(StripeError::TransportError(e)),
+        };
+        let mut response = match connection.send() {
+            Ok(o) => o,
+            Err(e) => return Err(StripeError::TransportError(e)),
+        };
 
         let mut body = vec![];
-        let _ = try!(response.read_to_end(&mut body));
+        match response.read_to_end(&mut body) {
+            Ok(_) => {},
+            Err(e) => return Err(StripeError::IOError(e)),
+        }
 
-        let object: T = StripeDecoder::decode(body);
+        let object: T = match StripeDecoder::decode(body) {
+            Ok(o) => o,
+            Err(e) => return Err(StripeError::DecodingError(e)),
+        };
 
         return Ok(object);
     }
 
-    pub fn customers(&self) -> Result<CustomerList, HttpError> {
+    pub fn customers(&self) -> Result<CustomerList, StripeError> {
         let req = self.request(urlify!("v1", "customers"));
         return Connection::fetch(req);
     }
 
-    pub fn cards(&self, customer: CustomerId) -> Result<CardList, HttpError> {
+    pub fn cards(&self, customer: CustomerId) -> Result<CardList, StripeError> {
         let req = self.request(urlify!("v1", "customers", customer, "cards"));
         return Connection::fetch(req);
     }

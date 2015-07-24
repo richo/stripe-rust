@@ -1,5 +1,6 @@
 #![feature(collections)]
 #![feature(convert)]
+#![feature(append)]
 
 extern crate hyper;
 extern crate rustc_serialize;

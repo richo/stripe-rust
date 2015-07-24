@@ -5,16 +5,12 @@ use rustc_serialize::json;
 
 pub struct StripeDecoder<T>(T);
 
+pub type StripeDecoderError = json::DecoderError;
+
 impl<T: Decodable> StripeDecoder<T> {
-    // TODO this should be a Result
-    pub fn decode(data: Vec<u8>) -> T {
+    pub fn decode(data: Vec<u8>) -> Result<T, StripeDecoderError> {
         let data = str::from_utf8(data.as_slice());
 
-        let decoded: T = match json::decode(data.unwrap()) {
-            Ok(v) => v,
-            Err(e) => panic!("Decoding error: {}", e)
-        };
-
-        return decoded;
+        json::decode(data.unwrap())
     }
 }
