@@ -9,7 +9,7 @@ use hyper::client::Request;
 use hyper::net::Fresh;
 use hyper::Get;
 use hyper::header::Authorization;
-use hyper::error::HttpError;
+use hyper::error::Error as HttpError;
 use rustc_serialize::Decodable;
 
 type SecretKey = String;
