@@ -3,6 +3,8 @@ use subscription::SubscriptionList;
 use card::CardList;
 use std::iter::{IntoIterator};
 
+use connection::Connection;
+
 pub type CustomerId = String;
 
 // Decodable type from the API
@@ -30,6 +32,44 @@ pub struct Customer {
     currency: Option<String>,
     cards: CardList,
     default_card: Option<String>
+}
+
+// TODO(richo) Pull this out into a macro
+#[derive(RustcEncodable)]
+pub struct CustomerRequest {
+    email: Option<String>,
+    card: Option<String>,
+}
+
+pub trait Creatable {
+    type Object;
+
+    fn path() -> &'static str;
+}
+
+impl Creatable for Customer {
+    type Object = CustomerRequest;
+
+    fn path() -> &'static str {
+        "customer"
+    }
+}
+
+// TODO(richo) rip this out into a trait?
+// TODO(richo) Alternately, to avoid parameter hell, materialize a Customer and then ::save?
+
+impl Customer {
+    fn create(conn: Connection, email: String, card: String) -> Customer {
+        let tmp = CustomerRequest {
+            email: Some(email),
+            card: Some(card),
+        };
+
+        match conn.create(tmp) {
+            Ok(o) => o,
+            Err(e) => panic!("{:?}", e),
+        }
+    }
 }
 
 iterable!(CustomerList, Customer);

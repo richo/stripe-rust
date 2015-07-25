@@ -1,7 +1,7 @@
 use std::string::String;
 use std::io;
 use std::io::Read;
-use customer::{CustomerList,CustomerId};
+use customer::{CustomerList,CustomerId,Creatable};
 use card::CardList;
 use decoder::{StripeDecoder,StripeDecoderError};
 use url::Url;
@@ -26,6 +26,7 @@ macro_rules! urlify {
     }
 }
 
+#[derive(Debug)]
 pub enum StripeError {
     TransportError(HttpError),
     DecodingError(StripeDecoderError),
@@ -72,8 +73,19 @@ impl Connection {
         return Ok(object);
     }
 
-    fn create<T: Encodable>(req: Request<Fresh>, object: T) -> Result<T, StripeError> {
-        panic!()
+    pub fn create<T>(&self, object: T::Object) -> Result<T, StripeError>
+        where T : Creatable + Decodable {
+        let req = self.request(Get, urlify!("v1", T::path()));
+
+        let connection = etry!(req.start(), StripeError::TransportError);
+        let mut response = etry!(connection.send(), StripeError::TransportError);
+
+        let mut body = vec![];
+
+        etry!(response.read_to_end(&mut body), StripeError::IOError);
+        let object: T = etry!(StripeDecoder::decode(body), StripeError::DecodingError);
+
+        return Ok(object);
     }
 
     pub fn customers(&self) -> Result<CustomerList, StripeError> {
