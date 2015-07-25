@@ -7,7 +7,8 @@ use decoder::{StripeDecoder,StripeDecoderError};
 use url::Url;
 use hyper::client::Request;
 use hyper::net::Fresh;
-use hyper::Get;
+use hyper::method::Method;
+use hyper::{Get, Post};
 use hyper::header::Authorization;
 use hyper::error::Error as HttpError;
 use rustc_serialize::{Decodable,Encodable};
@@ -48,10 +49,10 @@ impl Connection {
         };
     }
 
-    fn request(&self, mut path: Vec<String>) -> Request<Fresh> {
+    fn request(&self, method: Method, mut path: Vec<String>) -> Request<Fresh> {
         let mut url = self.base_url.clone();
         url.path_mut().unwrap().append(&mut path);
-        let mut request = Request::new(Get, url).unwrap();
+        let mut request = Request::new(method, url).unwrap();
         let mut auth = "Bearer ".to_string();
         auth.push_str(&self.secret_key[..]);
         request.headers_mut().set(Authorization(auth));
@@ -71,13 +72,17 @@ impl Connection {
         return Ok(object);
     }
 
+    fn create<T: Encodable>(req: Request<Fresh>, object: T) -> Result<T, StripeError> {
+        panic!()
+    }
+
     pub fn customers(&self) -> Result<CustomerList, StripeError> {
-        let req = self.request(urlify!("v1", "customers"));
+        let req = self.request(Get, urlify!("v1", "customers"));
         return Connection::fetch(req);
     }
 
     pub fn cards(&self, customer: CustomerId) -> Result<CardList, StripeError> {
-        let req = self.request(urlify!("v1", "customers", customer, "cards"));
+        let req = self.request(Get, urlify!("v1", "customers", customer, "cards"));
         return Connection::fetch(req);
     }
 
