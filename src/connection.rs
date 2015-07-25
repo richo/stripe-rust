@@ -31,6 +31,15 @@ pub enum StripeError {
     IOError(io::Error),
 }
 
+macro_rules! etry {
+    ($expr:expr, $exc:expr) => {
+        match $expr {
+            Ok(o) => o,
+            Err(e) => return Err($exc(e)),
+        }
+    }
+}
+
 impl Connection {
     pub fn new(secret_key: String) -> Connection {
         return Connection {
@@ -51,25 +60,13 @@ impl Connection {
     }
 
     fn fetch<T: Decodable>(req: Request<Fresh>) -> Result<T, StripeError> {
-        let connection = match req.start() {
-            Ok(o) => o,
-            Err(e) => return Err(StripeError::TransportError(e)),
-        };
-        let mut response = match connection.send() {
-            Ok(o) => o,
-            Err(e) => return Err(StripeError::TransportError(e)),
-        };
+        let connection = etry!(req.start(), StripeError::TransportError);
+        let mut response = etry!(connection.send(), StripeError::TransportError);
 
         let mut body = vec![];
-        match response.read_to_end(&mut body) {
-            Ok(_) => {},
-            Err(e) => return Err(StripeError::IOError(e)),
-        }
 
-        let object: T = match StripeDecoder::decode(body) {
-            Ok(o) => o,
-            Err(e) => return Err(StripeError::DecodingError(e)),
-        };
+        etry!(response.read_to_end(&mut body), StripeError::IOError);
+        let object: T = etry!(StripeDecoder::decode(body), StripeError::DecodingError);
 
         return Ok(object);
     }
