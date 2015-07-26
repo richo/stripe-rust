@@ -46,7 +46,7 @@ impl Creatable for Customer {
     type Object = CustomerRequest;
 
     fn path() -> &'static str {
-        "customer"
+        "customers"
     }
 }
 
