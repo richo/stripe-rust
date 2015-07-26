@@ -29,6 +29,40 @@ macro_rules! iterable {
     )
 }
 
+macro_rules! creatable {
+    ($entity:ident, $request:ident, $path:expr,
+     ($($field:ident => $ty:ty),*)) => {
+        #[derive(RustcEncodable)]
+        pub struct $request {
+            $(
+                $field: Option<$ty>,
+                )*
+        }
+
+        impl UrlEncodable for $request {
+            fn into_iter(self) -> Vec<(&'static str, String)> {
+                let mut tmp = vec![];
+
+                let $(($field,) = (self.$field,))*;
+                $(
+                    if let Some(v) = $field {
+                        tmp.push((stringify!($field), v));
+                    }
+                 )*
+                    tmp
+            }
+        }
+        impl Creatable for $entity {
+            type Object = $request;
+
+            fn path() -> &'static str {
+                $path
+            }
+        }
+    }
+}
+
+
 pub mod connection;
 pub mod customer;
 pub mod subscription;

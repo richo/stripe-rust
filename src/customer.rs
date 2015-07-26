@@ -35,31 +35,8 @@ pub struct Customer {
     default_card: Option<String>
 }
 
-// TODO(richo) Pull this out into a macro
-#[derive(RustcEncodable)]
-pub struct CustomerRequest {
-    source: Option<String>,
-}
-
-impl UrlEncodable for CustomerRequest {
-    fn into_iter(self) -> Vec<(String, String)> {
-        let mut tmp = vec![];
-
-        let (source,) = (self.source,);
-        if let Some(source) = source {
-            tmp.push(("source".to_string(), source));
-        }
-        tmp
-    }
-}
-
-impl Creatable for Customer {
-    type Object = CustomerRequest;
-
-    fn path() -> &'static str {
-        "customers"
-    }
-}
+creatable!(Customer, CustomerRequest, "customers",
+           (source => String));
 
 // TODO(richo) rip this out into a trait?
 // TODO(richo) Alternately, to avoid parameter hell, materialize a Customer and then ::save?
