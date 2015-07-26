@@ -31,7 +31,7 @@ pub struct Customer {
     discount: Option<String>,
     account_balance: f64,
     currency: Option<String>,
-    cards: CardList,
+    cards: Option<CardList>,
     default_card: Option<String>
 }
 
