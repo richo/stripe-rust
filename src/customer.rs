@@ -36,15 +36,17 @@ pub struct Customer {
 }
 
 creatable!(Customer, CustomerRequest, "customers",
-           (source => String));
+           (source => String,
+            email => String));
 
 // TODO(richo) rip this out into a trait?
 // TODO(richo) Alternately, to avoid parameter hell, materialize a Customer and then ::save?
 
 impl Customer {
-    pub fn create(conn: Connection, source: String) -> Customer {
+    pub fn create(conn: Connection, email: String, source: String) -> Customer {
         let tmp = CustomerRequest {
             source: Some(source),
+            email: Some(email),
         };
 
         match conn.create(tmp) {

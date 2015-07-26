@@ -43,7 +43,7 @@ macro_rules! creatable {
             fn into_iter(self) -> Vec<(&'static str, String)> {
                 let mut tmp = vec![];
 
-                let $(($field,) = (self.$field,))*;
+                let ($($field,)*) = ($(self.$field,)*);
                 $(
                     if let Some(v) = $field {
                         tmp.push((stringify!($field), v));

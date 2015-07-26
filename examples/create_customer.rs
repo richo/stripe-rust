@@ -7,13 +7,13 @@ use std::env;
 
 fn usage() {
     let args: Vec<_> = env::args().collect();
-    println!("Usage: {} tok", args[0]);
+    println!("Usage: {} email tok", args[0]);
 }
 
 fn main() {
     let args: Vec<_> = env::args().collect();
     match &args[..] {
-        [_, ref tok] => create_customer(tok),
+        [_, ref email, ref tok] => create_customer(email, tok),
         _ => {
             usage();
             return;
@@ -26,8 +26,8 @@ fn get_conn() -> Connection {
     return Connection::new(secret_key);
 }
 
-fn create_customer(token: &String) {
-    let cus = Customer::create(get_conn(), token.clone());
+fn create_customer(email: &String, token: &String) {
+    let cus = Customer::create(get_conn(), email.clone(), token.clone());
 
     println!("{:?}", cus);
 }
