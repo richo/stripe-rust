@@ -4,7 +4,7 @@ use card::CardList;
 use std::iter::{IntoIterator};
 
 use connection::Connection;
-use util::Creatable;
+use util::{Creatable,UrlEncodable};
 
 pub type CustomerId = String;
 
@@ -38,8 +38,19 @@ pub struct Customer {
 // TODO(richo) Pull this out into a macro
 #[derive(RustcEncodable)]
 pub struct CustomerRequest {
-    email: Option<String>,
-    card: Option<String>,
+    source: Option<String>,
+}
+
+impl UrlEncodable for CustomerRequest {
+    fn into_iter(self) -> Vec<(String, String)> {
+        let mut tmp = vec![];
+
+        let (source,) = (self.source,);
+        if let Some(source) = source {
+            tmp.push(("source".to_string(), source));
+        }
+        tmp
+    }
 }
 
 impl Creatable for Customer {
@@ -54,10 +65,9 @@ impl Creatable for Customer {
 // TODO(richo) Alternately, to avoid parameter hell, materialize a Customer and then ::save?
 
 impl Customer {
-    pub fn create(conn: Connection, email: String, card: String) -> Customer {
+    pub fn create(conn: Connection, source: String) -> Customer {
         let tmp = CustomerRequest {
-            email: Some(email),
-            card: Some(card),
+            source: Some(source),
         };
 
         match conn.create(tmp) {

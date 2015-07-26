@@ -1,11 +1,12 @@
 use std::string::String;
 use std::io;
-use std::io::Read;
+use std::io::{Read,Write};
 use customer::{CustomerList,CustomerId};
-use util::Creatable;
+use util::{Creatable,UrlEncodable};
 use card::CardList;
 use decoder::{StripeDecoder,StripeDecoderError};
-use url::Url;
+use url::{Url,form_urlencoded};
+use rustc_serialize::json;
 use hyper::client::Request;
 use hyper::net::Fresh;
 use hyper::method::Method;
@@ -76,9 +77,13 @@ impl Connection {
 
     pub fn create<T>(&self, object: T::Object) -> Result<T, StripeError>
         where T : Creatable + Decodable {
-        let req = self.request(Get, urlify!("v1", T::path()));
+        let req = self.request(Post, urlify!("v1", T::path()));
 
-        let connection = etry!(req.start(), StripeError::TransportError);
+        let mut connection = etry!(req.start(), StripeError::TransportError);
+
+        let payload = form_urlencoded::serialize(object.into_iter());
+        connection.write_all(payload.as_bytes());
+
         let mut response = etry!(connection.send(), StripeError::TransportError);
 
         let mut body = vec![];
