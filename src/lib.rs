@@ -46,7 +46,7 @@ macro_rules! creatable {
                 let ($($field,)*) = ($(self.$field,)*);
                 $(
                     if let Some(v) = $field {
-                        tmp.push((stringify!($field), v));
+                        tmp.push((stringify!($field), format!("{}", v)));
                     }
                  )*
                     tmp
@@ -67,5 +67,6 @@ pub mod connection;
 pub mod customer;
 pub mod subscription;
 pub mod card;
+pub mod charge;
 mod decoder;
 mod util;
