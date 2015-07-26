@@ -54,7 +54,7 @@ impl Creatable for Customer {
 // TODO(richo) Alternately, to avoid parameter hell, materialize a Customer and then ::save?
 
 impl Customer {
-    fn create(conn: Connection, email: String, card: String) -> Customer {
+    pub fn create(conn: Connection, email: String, card: String) -> Customer {
         let tmp = CustomerRequest {
             email: Some(email),
             card: Some(card),
