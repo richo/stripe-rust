@@ -4,6 +4,7 @@ use card::CardList;
 use std::iter::{IntoIterator};
 
 use connection::Connection;
+use util::Creatable;
 
 pub type CustomerId = String;
 
@@ -39,12 +40,6 @@ pub struct Customer {
 pub struct CustomerRequest {
     email: Option<String>,
     card: Option<String>,
-}
-
-pub trait Creatable {
-    type Object;
-
-    fn path() -> &'static str;
 }
 
 impl Creatable for Customer {

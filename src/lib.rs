@@ -34,3 +34,4 @@ pub mod customer;
 pub mod subscription;
 pub mod card;
 mod decoder;
+mod util;

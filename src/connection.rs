@@ -1,7 +1,8 @@
 use std::string::String;
 use std::io;
 use std::io::Read;
-use customer::{CustomerList,CustomerId,Creatable};
+use customer::{CustomerList,CustomerId};
+use util::Creatable;
 use card::CardList;
 use decoder::{StripeDecoder,StripeDecoderError};
 use url::Url;
