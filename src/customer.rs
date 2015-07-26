@@ -21,7 +21,7 @@ pub struct CustomerList {
 pub struct Customer {
     object: String,
     created: usize,
-    id: CustomerId,
+    pub id: CustomerId,
     livemode: bool,
     description: Option<String>,
     email: Option<String>,
