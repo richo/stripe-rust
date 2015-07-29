@@ -1,4 +1,4 @@
-use connection::Connection;
+use connection::{Connection,StripeError};
 use util::{Creatable,UrlEncodable};
 use customer::Customer;
 
@@ -21,7 +21,7 @@ creatable!(Charge, ChargeRequest, "charges",
             ));
 
 impl Charge {
-    pub fn create(conn: Connection, amount: usize, customer: Customer) -> Charge {
+    pub fn create(conn: Connection, amount: usize, customer: Customer) -> Result<Charge,StripeError> {
         let tmp = ChargeRequest {
             amount: Some(amount),
             customer: Some(customer.id),
@@ -30,9 +30,6 @@ impl Charge {
             source: None,
         };
 
-        match conn.create(tmp) {
-            Ok(o) => o,
-            Err(e) => panic!("{:?}", e),
-        }
+        conn.create(tmp)
     }
 }
