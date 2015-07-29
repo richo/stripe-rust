@@ -8,7 +8,7 @@ use decoder::{StripeDecoder,StripeDecoderError};
 use url::{Url,form_urlencoded};
 use rustc_serialize::json;
 use hyper::client::Request;
-use hyper::net::Fresh;
+use hyper::net::{Fresh,Streaming};
 use hyper::method::Method;
 use hyper::{Get, Post};
 use hyper::header::Authorization;
@@ -44,6 +44,17 @@ macro_rules! etry {
     }
 }
 
+fn process<T: Decodable>(req: Request<Streaming>) -> Result<T, StripeError> {
+    let mut response = etry!(req.send(), StripeError::TransportError);
+
+    let mut body = vec![];
+
+    etry!(response.read_to_end(&mut body), StripeError::IOError);
+    let object: T = etry!(StripeDecoder::decode(body), StripeError::DecodingError);
+
+    return Ok(object);
+}
+
 impl Connection {
     pub fn new(secret_key: String) -> Connection {
         return Connection {
@@ -64,34 +75,20 @@ impl Connection {
     }
 
     fn fetch<T: Decodable>(req: Request<Fresh>) -> Result<T, StripeError> {
-        let connection = etry!(req.start(), StripeError::TransportError);
-        let mut response = etry!(connection.send(), StripeError::TransportError);
-
-        let mut body = vec![];
-
-        etry!(response.read_to_end(&mut body), StripeError::IOError);
-        let object: T = etry!(StripeDecoder::decode(body), StripeError::DecodingError);
-
-        return Ok(object);
+        let req = etry!(req.start(), StripeError::TransportError);
+        process(req)
     }
 
     pub fn create<T>(&self, object: T::Object) -> Result<T, StripeError>
         where T : Creatable + Decodable {
         let req = self.request(Post, urlify!("v1", T::path()));
 
-        let mut connection = etry!(req.start(), StripeError::TransportError);
+        let mut req = etry!(req.start(), StripeError::TransportError);
 
         let payload = form_urlencoded::serialize(object.into_iter());
-        connection.write_all(payload.as_bytes());
+        req.write_all(payload.as_bytes());
 
-        let mut response = etry!(connection.send(), StripeError::TransportError);
-
-        let mut body = vec![];
-
-        etry!(response.read_to_end(&mut body), StripeError::IOError);
-        let object: T = etry!(StripeDecoder::decode(body), StripeError::DecodingError);
-
-        return Ok(object);
+        process(req)
     }
 
     pub fn customers(&self) -> Result<CustomerList, StripeError> {
