@@ -6,14 +6,13 @@ use util::{Creatable,UrlEncodable};
 use card::CardList;
 use decoder::{StripeDecoder,StripeDecoderError};
 use url::{Url,form_urlencoded};
-use rustc_serialize::json;
 use hyper::client::Request;
 use hyper::net::{Fresh,Streaming};
 use hyper::method::Method;
 use hyper::{Get, Post};
 use hyper::header::Authorization;
 use hyper::error::Error as HttpError;
-use rustc_serialize::{Decodable,Encodable};
+use rustc_serialize::Decodable;
 
 type SecretKey = String;
 
