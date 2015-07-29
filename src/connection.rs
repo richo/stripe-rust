@@ -85,7 +85,7 @@ impl Connection {
         let mut req = etry!(req.start(), StripeError::TransportError);
 
         let payload = form_urlencoded::serialize(object.into_iter());
-        req.write_all(payload.as_bytes());
+        etry!(req.write_all(payload.as_bytes()), StripeError::IOError);
 
         process(req)
     }
