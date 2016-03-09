@@ -34,22 +34,40 @@ pub enum StripeError {
     IOError(io::Error),
 }
 
+impl From<StripeDecoderError> for StripeError {
+    fn from(e: StripeDecoderError) -> StripeError {
+        StripeError::DecodingError(e)
+    }
+}
+
+impl From<io::Error> for StripeError {
+    fn from(e: io::Error) -> StripeError {
+        StripeError::IOError(e)
+    }
+}
+
+impl From<HttpError> for StripeError {
+    fn from(e: HttpError) -> StripeError {
+        StripeError::TransportError(e)
+    }
+}
+
 macro_rules! etry {
-    ($expr:expr, $exc:expr) => {
+    ($expr:expr) => {
         match $expr {
             Ok(o) => o,
-            Err(e) => return Err($exc(e)),
+            Err(e) => return Err(StripeError::from(e)),
         }
     }
 }
 
 fn process<T: Decodable>(req: Request<Streaming>) -> Result<T, StripeError> {
-    let mut response = etry!(req.send(), StripeError::TransportError);
+    let mut response = etry!(req.send());
 
     let mut body = vec![];
 
-    etry!(response.read_to_end(&mut body), StripeError::IOError);
-    let object: T = etry!(StripeDecoder::decode(body), StripeError::DecodingError);
+    etry!(response.read_to_end(&mut body));
+    let object: T = etry!(StripeDecoder::decode(body));
 
     return Ok(object);
 }
@@ -74,7 +92,7 @@ impl Connection {
     }
 
     fn fetch<T: Decodable>(req: Request<Fresh>) -> Result<T, StripeError> {
-        let req = etry!(req.start(), StripeError::TransportError);
+        let req = etry!(req.start());
         process(req)
     }
 
@@ -82,10 +100,10 @@ impl Connection {
         where T : Creatable + Decodable {
         let req = self.request(Post, urlify!("v1", T::path()));
 
-        let mut req = etry!(req.start(), StripeError::TransportError);
+        let mut req = etry!(req.start());
 
         let payload = form_urlencoded::serialize(object.into_iter());
-        etry!(req.write_all(payload.as_bytes()), StripeError::IOError);
+        etry!(req.write_all(payload.as_bytes()));
 
         process(req)
     }
