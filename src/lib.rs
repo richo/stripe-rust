@@ -1,11 +1,6 @@
-#![feature(collections)]
-#![feature(convert)]
-#![feature(append)]
-
 extern crate hyper;
 extern crate rustc_serialize;
 extern crate url;
-extern crate collections;
 
 macro_rules! iterable {
     ($collection:ident, $name:ident) => (
@@ -22,7 +17,7 @@ macro_rules! iterable {
 
     // This is a stopgap until I work out how2IntoIterator
         impl $collection {
-            pub fn into_iter(self) -> ::collections::vec::IntoIter<$name> {
+            pub fn into_iter(self) -> ::std::vec::IntoIter<$name> {
                 self.data.into_iter()
             }
         }

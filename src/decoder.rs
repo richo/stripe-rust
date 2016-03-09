@@ -9,7 +9,7 @@ pub type StripeDecoderError = json::DecoderError;
 
 impl<T: Decodable> StripeDecoder<T> {
     pub fn decode(data: Vec<u8>) -> Result<T, StripeDecoderError> {
-        let data = str::from_utf8(data.as_slice());
+        let data = str::from_utf8(&data[..]);
 
         json::decode(data.unwrap())
     }
