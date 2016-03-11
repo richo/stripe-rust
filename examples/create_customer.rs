@@ -1,4 +1,3 @@
-#![feature(slice_patterns)]
 extern crate stripe;
 use stripe::connection::Connection;
 use stripe::customer::Customer;
